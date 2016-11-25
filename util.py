@@ -13,9 +13,10 @@ def padding(document_list, max_len):
 def load_data(fname):
 
     model =  word2vec.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+    print("loaded word2vec model.")
 
     target = [] #ラベル
-    source = [] #文書ベクトル
+    #source = [] #文書ベクトル
 
     #文書リストを作成
     document_list = []
@@ -42,9 +43,11 @@ def load_data(fname):
     
     #文書長をpaddingにより合わせる
     rev_document_list = padding(rev_document_list, max_len)
-    
-    width = 0 #各単語の次元数
+
+    width = 300 #各単語の次元数
+    source = np.zeros((len(rev_document_list), max_len, width), dtype=np.float32)
     #文書の特徴ベクトル化
+    count = 0
     for doc in rev_document_list:
         doc_vec = []
         for word in doc:
@@ -53,8 +56,9 @@ def load_data(fname):
             except KeyError:
                 vec = model.seeded_vector(word)
             doc_vec.extend(vec)
-            width = len(vec)
-        source.append(doc_vec)
+            #width = len(vec)
+        source[count,:,:,:] = doc_vec
+        count += 1
 
     dataset = {}
     dataset['target'] = np.array(target)    
