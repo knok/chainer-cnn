@@ -55,9 +55,9 @@ def load_data(fname):
                 vec = model[word.decode('utf-8')]
             except KeyError:
                 vec = model.seeded_vector(word)
-            doc_vec.extend(vec)
+            doc_vec.append(vec)
             #width = len(vec)
-        source[count,:,:,:] = doc_vec
+        source[count,:,:] = doc_vec
         count += 1
 
     dataset = {}
