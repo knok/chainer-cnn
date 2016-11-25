@@ -18,13 +18,13 @@ class SimpleCNN(Chain):
     
     #Classifier によって呼ばれる
     def __call__(self, x):
-        h1 = F.max_pooling_2d(F.relu(self.conv1(x)), 3)
+        h1 = F.F.spatial_pyramid_pooling_2d(F.relu(self.conv1(x)), 2, F.MaxPooling2D)
         h2 = F.dropout(F.relu(self.l1(h1)))
         y = self.l2(h2)
         return y
 
     def forward(self, x, t, train=True):
-        h1 = F.max_pooling_2d(F.relu(self.conv1(x)), 3)
+        h1 = F.F.spatial_pyramid_pooling_2d(F.relu(self.conv1(x)), 2, F.MaxPooling2D)
         h2 = F.dropout(F.relu(self.l1(h1)), train=train)
         y = self.l2(h2)
         return F.softmax_cross_entropy(y, t), F.accuracy(y, t)
