@@ -56,9 +56,10 @@ n_units = args.nunits
 n_label = 2
 filter_height = 3
 output_channel = 50
+mid_units = 150
 
 #モデルの定義
-model = L.Classifier( SimpleCNN(input_channel, output_channel, filter_height, width, 950, n_units, n_label))
+model = L.Classifier( SimpleCNN(input_channel, output_channel, filter_height, width, mid_units, n_units, n_label))
 
 #GPUを使うかどうか
 if args.gpu >= 0:
