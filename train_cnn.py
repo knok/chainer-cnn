@@ -23,7 +23,7 @@ CNNによるテキスト分類 (posi-nega)
 
 #引数の設定
 parser = argparse.ArgumentParser()
-parser.add_argument('--gpu  '    , dest='gpu'        , type=int, default=0,            help='1: use gpu, 0: use cpu')
+parser.add_argument('--gpu  '    , dest='gpu'        , type=int, default=-1,            help='1: use gpu, 0: use cpu')
 parser.add_argument('--data '    , dest='data'       , type=str, default='input.dat',  help='an input data file')
 parser.add_argument('--epoch'    , dest='epoch'      , type=int, default=100,          help='number of epochs to learn')
 parser.add_argument('--batchsize', dest='batchsize'  , type=int, default=40,           help='learning minibatch size')
@@ -61,11 +61,13 @@ output_channel = 50
 model = L.Classifier( SimpleCNN(input_channel, output_channel, filter_height, width, 950, n_units, n_label))
 
 #GPUを使うかどうか
-if args.gpu > 0:
+if args.gpu >= 0:
     cuda.check_cuda_available()
     cuda.get_device(args.gpu).use()
     model.to_gpu()
-    xp = np if args.gpu <= 0 else cuda.cupy #args.gpu <= 0: use cpu, otherwise: use gpu
+    xp = np if args.gpu < 0 else cuda.cupy #args.gpu < 0: use cpu, otherwise: use gpu
+else:
+    xp = np
 
 batchsize = args.batchsize
 n_epoch = args.epoch
